@@ -9,7 +9,7 @@
 高俊峰  著
 
 
-![上海同学合影](./../screenshots/shanghai20150613.png)
+![上海同学合影](../screenshots/shanghai20150613.png)
 
 
 
