@@ -10,12 +10,12 @@
 ```bash
    lspci
 ```	
-  host bridge：集成主板设备
-  VGA compatible controller：VGA显卡设备
-  Class 0403：Intel 声卡设备
-  USB Controller：USB接口设备
-  SATA controller：SATA控制器
-  Ethernet controller：千兆网卡设备
+ - host bridge：集成主板设备
+ -  VGA compatible controller：VGA显卡设备
+ -  Class 0403：Intel 声卡设备
+  - USB Controller：USB接口设备
+  - SATA controller：SATA控制器
+  - Ethernet controller：千兆网卡设备
   
 此外，通过命令  lspic -v  能查看到更详细的PCI设备信息  
 
