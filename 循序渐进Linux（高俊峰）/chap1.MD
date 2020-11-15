@@ -145,33 +145,47 @@ reboot.target 对应 runlevel6，表示重启系统模式。
  
   通过 systemctl 命令可以启用、禁用服务，以此来控制开机服务启动，
   可以使用 enable/disable 选项来控制一个服务示范开机启动，命令如下。
+
+  打开 httpd 服务 开机自启动功能。
 ```bash
-	打开 httpd 服务 开机自启动功能。
 	systemctl enable httpd.service 
+```
 
 	关闭 httpd 服务 开机自启动
+```bash
 	systemctl disable httpd.service 
-	
+```
+
 	查看一个服务的运行状态，可以使用 systemctl 命令的 "status"选项
+```bash
 	systemctl status httpd.service
 ```
  
   * rz,sz进行文件的上传和下载
-```bash
+
   查询是否安装了 lrzsz 软件包
+```bash
   rpm -q lrzsz
-  
+```
+
   安装 lrzsz
+```bash  
   yum install lrzsz 
+```
   
   从Linux下载文件到本地 
+```bash
   sz   需要下载的文件的路径
+```
   例如：
+```bash
   sz test.txt 
+```
 
   从本地上传文件到Linux 
+```bash
   rz  
-  然后选择要上传的文件
-
 ```
+然后选择要上传的文件
+
  
