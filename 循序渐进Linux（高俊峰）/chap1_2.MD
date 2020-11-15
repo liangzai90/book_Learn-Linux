@@ -4,7 +4,7 @@
 
 ### shell命令的语法分析
 
- * 1.shell的命令格式
+####1.shell的命令格式
 
 command  [options]  [arguments]
 
@@ -19,7 +19,7 @@ arguments：表示命令的参数
 ls -la /etc 
 ```
 
- * 2.shell的通配符
+####2.shell的通配符
 
 bash中常用的通配符有"*","?","[]"
 
@@ -70,7 +70,7 @@ ls  [xyz]*.txt
 这条命令列出当前目录下以x、y或z开头，最后以".txt"结尾的文件。
 
 
- * 3.shell的重定向
+####3.shell的重定向
  
   Linux下系统打开3个文件，即标准输入、标准输出和标准错误输出。
 用户的shell将键盘设为默认的标准输入，默认的标准输出和标准错误输出为屏幕。
@@ -131,7 +131,8 @@ tar -zxvf text.tar.gz  2> error.txt
 tar是打包命令，可以在屏幕看到tar的解压过程。
 如果"text.tar.gz"是个损坏的压缩包，就会把错误消息输出到 error.txt 文件。
 
- * 4.shell管道
+
+####4.shell管道
 
 
 
