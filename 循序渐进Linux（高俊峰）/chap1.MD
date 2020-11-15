@@ -97,14 +97,15 @@ xfs : Linux下一种高性能的日志文件系统，在Centos7.x版本中称为默认文件系统。
 ```
 
 
+查看系统的默认 target
 ```bash
-  查看系统的默认 target
 [henry@localhost system]$ ll  /etc/systemd/system/default.target
 lrwxrwxrwx. 1 root root 37 Jun 14 14:04 /etc/systemd/system/default.target -> /lib/systemd/system/multi-user.target
+```
 
 
-
-  查看运行级别与 target 的对应关系
+查看运行级别与 target 的对应关系
+```bash
 [henry@localhost system]$ ll  /lib/systemd/system/runlevel*.target
 lrwxrwxrwx. 1 root root 15 Jun 14 19:58 /lib/systemd/system/runlevel0.target -> poweroff.target
 lrwxrwxrwx. 1 root root 13 Jun 14 19:58 /lib/systemd/system/runlevel1.target -> rescue.target
@@ -113,8 +114,10 @@ lrwxrwxrwx. 1 root root 17 Jun 14 19:58 /lib/systemd/system/runlevel3.target -> 
 lrwxrwxrwx. 1 root root 17 Jun 14 19:58 /lib/systemd/system/runlevel4.target -> multi-user.target
 lrwxrwxrwx. 1 root root 16 Jun 14 19:58 /lib/systemd/system/runlevel5.target -> graphical.target
 lrwxrwxrwx. 1 root root 13 Jun 14 19:58 /lib/systemd/system/runlevel6.target -> reboot.target
+```
 
-5种target模式
+```txt
+    5种target模式
 poweroff.target 对应 runlevel0，表示关机模式；
 rescue.target 对应 runlevel1，表示单用户模式或救援模式；
 multi-user.target 对应 runlevel2、runlevel3、runlevel4，表示多用户模式；
@@ -125,64 +128,68 @@ reboot.target 对应 runlevel6，表示重启系统模式。
 
 ### 系统服务管理工具systemd
 
+#### 启动、停止、重启服务
 
- * 启动、停止、重启服务
+ * 通过 systemctl 命令启动一个服务：
 ```bash
-  通过 systemctl 命令启动一个服务：
   systemctl start httpd.service
+```
 
-  停止服务
+ * 停止服务
+```bash
   systemctl  stop  httpd.service
-  
-  重启服务
+```
+
+ * 重启服务
+```bash  
   systemctl  restart http.service
   systemctl  try-restart http.service
   systemctl  reload httpd.service
 ```
 
 
- * 查看、禁止、启用服务
+#### 查看、禁止、启用服务
  
   通过 systemctl 命令可以启用、禁用服务，以此来控制开机服务启动，
   可以使用 enable/disable 选项来控制一个服务示范开机启动，命令如下。
 
-  打开 httpd 服务 开机自启动功能。
+ * 打开 httpd 服务 开机自启动功能。
 ```bash
-	systemctl enable httpd.service 
+systemctl enable httpd.service 
 ```
 
-	关闭 httpd 服务 开机自启动
+ * 关闭 httpd 服务 开机自启动
 ```bash
-	systemctl disable httpd.service 
+systemctl disable httpd.service 
 ```
 
-	查看一个服务的运行状态，可以使用 systemctl 命令的 "status"选项
+ * 查看一个服务的运行状态，可以使用 systemctl 命令的 "status"选项
 ```bash
-	systemctl status httpd.service
+systemctl status httpd.service
 ```
  
-  * rz,sz进行文件的上传和下载
+#### rz,sz进行文件的上传和下载
 
-  查询是否安装了 lrzsz 软件包
+ * 查询是否安装了 lrzsz 软件包
 ```bash
   rpm -q lrzsz
 ```
 
-  安装 lrzsz
+ * 安装 lrzsz
 ```bash  
   yum install lrzsz 
 ```
   
-  从Linux下载文件到本地 
+ * 从Linux下载文件到本地 
 ```bash
   sz   需要下载的文件的路径
 ```
-  例如：
+例如：
 ```bash
   sz test.txt 
 ```
 
-  从本地上传文件到Linux 
+ * 从本地上传文件到Linux 
 ```bash
   rz  
 ```
