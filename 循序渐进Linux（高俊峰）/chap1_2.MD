@@ -133,24 +133,80 @@ tar是打包命令，可以在屏幕看到tar的解压过程。
 
 
 #### 4.shell管道
+通过管道符"|"可以建立管道连接，例如：
+这条命令表示将 /etc 目录以及子目录下的所有文件分屏显示。
+```bash
+ls -la /etc/* | more 
+```
+
+这个命令用于查看系统中正在运行的httpd进程，并统计httpd进程数
+```bash
+ps -ef |grep httpd | wc -l
+```
+
+#### 5.shell中的引用
+ * 转义字符"\" 
+ 将"\"放到特殊字符前面，shell 就忽略这些特殊字符的原有含义，把它们当做普通字符对待。
+
+ \\    \*  \?
+
+ * 单引号“'”
+ 如果将字符串放到一对单引号之间，那么字符串所有字符的特殊含义将被忽略。
+ 
+ * 双引号 “""”
+  双引号的引用与单引号基本相同，包含在双引号内的大部分特殊字符可以当作普通字符处理，
+但是仍有一些特殊字符即使使用双引号括起来，也仍然保留自己的特殊含义，比如“$”、“\”和“`”
+
+$,\，在双引号内仍然保留了特殊含义。
+注意，str之后不能有空格
+```bash
+[henry@localhost ~]$ str="The \$SHELL Current shell is $SHELL" 
+[henry@localhost ~]$ 
+[henry@localhost ~]$ 
+[henry@localhost ~]$ str1="\$$SHELL" 
+[henry@localhost ~]$ 
+[henry@localhost ~]$ echo str
+str
+[henry@localhost ~]$ echo $str 
+The $SHELL Current shell is /bin/bash
+[henry@localhost ~]$ 
+[henry@localhost ~]$ echo $str1
+$/bin/bash
+[henry@localhost ~]$ 
+[henry@localhost ~]$ 
 
 
 
+[henry@localhost ~]$ str2="this hostname is `hostname`" 
+[henry@localhost ~]$ echo $str2
+this hostname is localhost.localdomain
+
+```
+
+
+#### 6.shell的自动补全命令行
+输入某个命令的一部分之后，按Tab键，shell就会根据系统环境变量信息提示出于用户输入命令
+相似的所有命令和文件。
 
 
 
+### 系统管理和维护
+
+#### ls命令
+
+```bash
+
+```
 
 
+```bash
+
+```
 
 
+```bash
 
-
-
-
-
-
-
-
+```
 
 
 
