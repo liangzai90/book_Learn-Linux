@@ -614,18 +614,44 @@ lrwxrwxrwx. 1 henry henry     9 Jan  3 23:14 def -> file1.txt
 drwxrwxr-x. 3 henry henry    70 Nov 16 22:43 websockt
 ```
 
+### file 命令
+file命令用来显示文件的类型。
+对于长度为0的文件，将识别为空文件；
+对于符号连接文件，默认情况下将显示符号链接引用的真实文件路径。
+其格式如下：
+file  [选项]  文件名 
 ```bash
-
+[henry@localhost LinuxDemo]$ file file1.txt
+file1.txt: ASCII text
+[henry@localhost LinuxDemo]$ file websockt
+websockt: directory
+[henry@localhost LinuxDemo]$ file def
+def: symbolic link to `file1.txt'
+[henry@localhost LinuxDemo]$ file /etc/init.d/halt
+/etc/init.d/halt: cannot open (No such file or directory)
+[henry@localhost LinuxDemo]$ file /home/henry/project/cppDemo/a.out
+/home/henry/project/cppDemo/a.out: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked (uses shared libs), for GNU/Linux 2.6.32, BuildID[sha1]=e7d51edb28527e92a9e88ffc148d944b664e51d6, not stripped
 ```
 
-```bash
+### cp 命令
+cp 命令用来将给出的文件或者目录复制到另一个文件或者目录中。
+其格式如下；
+cp  [选项]  源文件或目录   目标文件或目录
 
+将当前目录下的所有文件复制到 /tmp 目录下，
+"./*"表示当前目录下所有文件和目录。
+```bash
+cp -r  ./*  /tmp
+```
+将 /home/oracle 目录及其子目录下的全部内容复制到 /home/ixdba 下
+```bash
+cp  -r  /home/oracle  /home/ixdba
 ```
 
-```bash
-
-```
-
+### find 命令
+find 命令用来在指定的路径下查找指定的文件。
+其格式如下：
+find  path-name  [-options]  [-print  -exec  -ok 命令{}\;]
 ```bash
 
 ```
