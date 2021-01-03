@@ -192,7 +192,83 @@ this hostname is localhost.localdomain
 
 ### 系统管理和维护
 
-#### ls命令
+#### ls 命令
+
+列出 /home 目录下文件及其子目录
+```bash
+ls  -l  /home 
+```
+
+### pwd 命令
+显示当前的工作目录
+```bash
+pwd
+```
+
+### cd 命令
+切换到 /usr/bin 目录下 
+```bash
+cd /usr/bin
+```
+
+返回当前用户的默认工作目录
+```bash
+cd 或 cd ~ 
+```
+
+
+### date 命令
+显示或者修改系统时间
+
+指定的格式显示时间和日期
+```bash
+[heliang@VM_0_10_centos ~]$  date '+this date now is:%x,time is now:%X,thanks!'
+this date now is:11/29/2020,time is now:11:05:29 AM,thanks!
+```
+
+修改系统时间，可以单独设置，也可以合并一起设置
+```bash
+[root@VM_0_10_centos heliang]# date -s 20101111
+Thu Nov 11 00:00:00 CST 2010
+[root@VM_0_10_centos heliang]# date -s 13:14
+Thu Nov 11 13:14:00 CST 2010
+[root@VM_0_10_centos heliang]# 
+[root@VM_0_10_centos heliang]# 
+[root@VM_0_10_centos heliang]# date -s "20201129 11:12"
+Sun Nov 29 11:12:00 CST 2020
+```
+
+
+显示两天前的时间，这里的单词不能错 2 days ago ，不能有多余字母~~~~！！！！
+```bash
+[root@VM_0_10_centos heliang]#  date "+%Y-%m-%d"
+2020-11-29
+[root@VM_0_10_centos heliang]# date -d "2 days agao" "+%Y-%m-%d" 
+date: invalid date ‘2 days agao’
+[root@VM_0_10_centos heliang]# 
+[root@VM_0_10_centos heliang]# date -d "2 days ago" +%Y-%m-%d
+2020-11-27
+[root@VM_0_10_centos heliang]# date -d "2 years ago" +%Y-%m-%d
+2018-11-29
+[root@VM_0_10_centos heliang]# 
+```
+
+### passwd 命令
+用于设置用户密码，语法格式如下：
+passwd [用户名]
+
+普通用户要修改自己的密码，使用如下命令
+```bash
+passwd
+```
+然后根据提示，连续两次输入密码即可。
+
+超级用户root修改某个用户的密码时，使用以下命令。
+```bash
+passwd [用户名]
+```
+然后根据提示，连续两次输入密码即可。
+
 
 ```bash
 
@@ -207,6 +283,126 @@ this hostname is localhost.localdomain
 ```bash
 
 ```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
