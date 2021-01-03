@@ -422,40 +422,221 @@ S     切换到累计模式
 
 ```
 
+## 文件管理与编辑
+
+### midir 命令
+mkdir命令用于创建一个目录。
+格式如下：
+mkdir  [选项]  目录名
+
+在当期目录下创建2个目录abc和def
+```bash
+mkdir  -p  ./abc/def 
+```
+
+### more 命令
+如果一个文本文件比较长，一屏无法显示完毕，就需要使用more命令。
+
+ 按Enter键，more命令就会接着再显示文本的一行
+ 按空格键，more命令就会继续显示文本文件的另一屏信息。
+
+格式如下：
+more  [选项]  文件名
+
+显示某个文件的内容，每10行显示一屏，同时清除屏幕：
+```bash
+more  -c  -10  abcdefgFile
+```
+
+### cat 命令
+cat命令用来将文件的内容输出到标准输出，类似于DOS下面的type命令，
+同时cat还可以用于连接合并文件。
+其格式如下：
+
+cat  [选项]  文件名
+
+或者：
+
+cat  文件1  文件2  >  文件3
+
+将file1.txt, file2.txt文件内容合并后输出到file3.txt
+合并输出之后，原来的文件file1.txt,file2.txt里面的内容不变。
+
+```bash
+[henry@localhost LinuxDemo]$ ls
+file1.txt  file2.txt  ps.txt  websockt
+[henry@localhost LinuxDemo]$ cat file1.txt 
+this is file1.txt
+abcdeft 
+file End
+[henry@localhost LinuxDemo]$ cat file2.txt 
+this is file2.txt
+aabbccddeeff
+file2 END...
+[henry@localhost LinuxDemo]$ cat file1.txt file2.txt > file3.txt 
+[henry@localhost LinuxDemo]$ cat file3.txt 
+this is file1.txt
+abcdeft 
+file End
+this is file2.txt
+aabbccddeeff
+file2 END...
+[henry@localhost LinuxDemo]$ cat file1.txt
+this is file1.txt
+abcdeft 
+file End
+```
+
+### diff 命令
+diff 命令用来比较文件的差异。
+
+以 "<" 打头的行属于文件1，
+以 ">" 打头的行属于文件2。
+
+a表示添加;
+d表示删除；
+c表示修改；
+
+```bash
+[henry@localhost LinuxDemo]$ diff file1.txt  file2.txt 
+1,3c1,3
+< this is file1.txt
+< abcdeft 
+< file End
+---
+> this is file2.txt
+> aabbccddeeff
+> file2 END...
+[henry@localhost LinuxDemo]$ diff file1.txt  file3.txt 
+3a4,6
+> this is file2.txt
+> aabbccddeeff
+> file2 END...
+
+```
+
+### grep 命令
+grep命令是Linux下的文本过滤工具，grep根据指定的字符串，
+对文件的每一行进行搜索，如果找到了这个字符串，就输出该行的内容。
+
+其格式如下：
+grep  [选项]  需要查找的字符串  文件名
+
+-i 搜索时忽略大小写；
+-n 在搜索结果中显示行号
+```bash
+grep -ni  aa file2.txt 
+```
+
+### rm 命令
+rm 命令用来删除某个目录及其下的所有文件及子目录。
+对于链接文件，只是断开了链接，原文件保持不变。
+其格式如下：
+rm  [选项]  文件或者目录  
+```bash
+rm 命令的选项及其说明
+
+-r    告诉rm将选项中列出的全部目录以及子目录还有文件均递归地删除。
+      如果不指定 "-r"选项，"rm"命令将不能删除目录。
+-f    忽略不存在的问题，也不给出提示
+-i    交互式删除，即在删除前进行确认	   
+```
+
+
+### touch 命令
+touch命令用来改变指定文件的访问时间和修改时间，若指定文件不存在则创建此文件。
+如果没有指定时间，则使用当前时间。
+其格式如下：
+touch  [选项]  设定的时间  文件
+
+```txt
+touch 命令的选项及其说明
+
+-a    改变文件的访问时间为系统当前时间，无须设置时间选项
+-m    改变文件的修改时间为系统当前时间，无须设置时间选项
+-c    如果文件不存在，不创建也不提示
+-d或-t  使用指定的日期或时间
+-r     把指定文件或目录的日期、时间都设置成和【参考文件】或目录的日期、时间相同
+```
+
+```bash
+touch  file1.txt   # 创建一个文件 file1.txt 
+touch -a  file1.txt  # 改变文件的访问时间为系统当前时间
+touch -m  file1.txt  # 改变文件的修改时间为系统的当前时间
+touch -a -r file2.txt  file1.txt # 将file1.txt文件的访问时间修改为file2.txt文件的访问时间
+touch -d "20210103 22:45" file2.txt # 将file2.txt文件的修改时间设定为2021年1月3日 22点45分
+```
+
+### ln 命令
+ln命令用来在文件或目录之间创建链接。
+Linux下的链接有两种，一种是硬链接(Hard Link)，另一种是符号链接(Symbolic Link)，
+默认情况下 ln 命令产生的是硬链接。
+
+ - > 硬链接：是指通过文件的 inode 来进行链接。在Linux的文件系统中，保存在磁盘的所有类型的文件
+都会分配一个编号，这个编号称为 inode 号（Inode Index）。多个文件指向同一个 inode 在
+Linux 系统中是允许的，这就是所谓的硬链接。硬链接的作用是允许一个文件拥有多个有效的路径名，
+这样用户就可以对一些重要文件建立硬链接，以防止误删除操作。
+因为对应该文件的 inode 有一个以上的链接，所以只删除一个链接并不影响 inode 本身和其他链接，
+只有当最后一个链接被删除后，文件的数据块及目录的链接才会释放，也就是说，此时文件才会被真正删除。
+
+ - > 符号链接：也叫软链接，软链接类似于windows中的快捷方式，因此软链接是一个
+指向真正的文件或目录位置的符号连接。
+
+ln 命令的格式如下：
+ln  [选项]  源文件  目标链接名
+
+给file3.txt 创建一个硬链接 abc 
+```bash
+[henry@localhost LinuxDemo]$ ln file3.txt  abc
+[henry@localhost LinuxDemo]$ ls 
+abc  file1.txt  file2.txt  file3.txt  ps.txt  websockt
+[henry@localhost LinuxDemo]$ ll
+total 28
+-rw-rw-r--. 2 henry henry    80 Jan  3 18:41 abc
+-rw-rw-r--. 1 henry henry    36 Jan  3 18:40 file1.txt
+-rw-rw-r--. 1 henry henry    44 Jan  3 18:41 file2.txt
+-rw-rw-r--. 2 henry henry    80 Jan  3 18:41 file3.txt
+-rw-rw-r--. 1 henry henry 10569 Nov 15 21:28 ps.txt
+drwxrwxr-x. 3 henry henry    70 Nov 16 22:43 websockt
+```
+
+给 file1.txt 文件创建一个软链接 def 
+```bash
+[henry@localhost LinuxDemo]$ ln -s file1.txt  def 
+[henry@localhost LinuxDemo]$ ll
+total 28
+-rw-rw-r--. 2 henry henry    80 Jan  3 18:41 abc
+lrwxrwxrwx. 1 henry henry     9 Jan  3 23:14 def -> file1.txt
+-rw-rw-r--. 1 henry henry    36 Jan  3 18:40 file1.txt
+-rw-rw-r--. 1 henry henry    44 Jan  3 18:41 file2.txt
+-rw-rw-r--. 2 henry henry    80 Jan  3 18:41 file3.txt
+-rw-rw-r--. 1 henry henry 10569 Nov 15 21:28 ps.txt
+drwxrwxr-x. 3 henry henry    70 Nov 16 22:43 websockt
+```
 
 ```bash
 
 ```
 
+```bash
+
+```
 
 ```bash
 
 ```
 
+```bash
+
+```
 
 ```bash
 
 ```
 
-
 ```bash
 
 ```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-
-
-
 
 
 
