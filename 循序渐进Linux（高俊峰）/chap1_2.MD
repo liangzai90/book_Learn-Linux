@@ -651,25 +651,579 @@ cp  -r  /home/oracle  /home/ixdba
 ### find 命令
 find 命令用来在指定的路径下查找指定的文件。
 其格式如下：
-find  path-name  [-options]  [-print  -exec  -ok 命令{}\;]
+find  path-name  [-options]  [-print  -exec  -ok 命令{} \;]
+
+-print：将搜索结果输出到标准输出。
+
+-exec：对搜索出符合条件的文件执行所给出的Linux命令，而不询问用户是否需要执行该命令。
+{}表示shell命令的选项即为所查找到的文件。
+命令的末尾必须以";"结束。
+在"}" 和 "\"之间一定要有空格才行。
+
+在系统根目录下，查找文件类型为普通文件，属于ixdba用户，两天以前，
+并且查找时不包含 /usr/bin 目录的文件名为 main.c的文件，
+并将结果输出到屏幕。
+```bash
+find / -path  "/usr/bin"  -prune -o  -name  "main.c"  -user  ixdba  -type  f -mtime  +2  -print
+```
+
+在系统根目录下查找 不在 /var/log 和 /usr/bin 目录下的所有普通文件
+```bash
+find / \( -path /var/log -o -path /usr/bin \) -prune  -o  type f -print
+```
+
+查找系统中所有大小为0的普通文件，并列出他们的完整路径
+```bash
+find / -type f -size 0 -exec ls -al {}  \;
+```
+
+在当前目录及子目录下查找所有 ".txt" 文件
+```bash
+find  .  -name  "*.txt"  -print
+```
+
+在 /etc 目录下查找文件属主为 henry 用户的文件
+```bash
+find /etc  -user henry -print
+```
+
+在用户自己的根目录下查找文件名以一个大写字母开头，
+紧接着是一个小写字母和两个数字，最后以 ".txt" 结尾的文件。
+```bash
+find ~ -name "[A-Z][a-z][0--9][0--9]*.txt" -print
+```
+
+### split 命令
+split命令用来分割文档，将一个文件分成数个。
+其格式如下：
+split  [选项]  [input_file]  [output_file]
+
+将 access_log 文件进行分割，设定每个分割文件的大小为10MB
+```bash
+split  -b 10M  access_log  access_log_bak
+```
+
+```txt
+split 命令的选项及其说明
+
+-b  size   指定分割出来的文件大小，size可加入单位，b代码512字节，k代表1kb,m代表1mb
+-n         这里 "n" 指定分割的每个文件的长度，默认为1000行
+-d         将split命令生成的文件序列以数字形式命名
+-a         指定split命令生成的文件序列的长度，默认长度为2
+```
+
+### mv 命令
+mv命令用来将文件或目录改名或将文件由一个目录移入另一个目录中。
+其格式如下：
+```bash
+mv  [选项]  源文件或目录  目标文件或目录 
+```
+
+## 压缩与解压
+
+### zip/unzip 命令
+将一般的文件或者目录进行压缩或解压，默认生成以".zip"为后缀的压缩包。
+其格式如下：
+```bash
+zip  [选项]  压缩文件名  需要压缩的文档列表
+unzip  [选项]  压缩文件名  
+
+
+       zip 命令的选项及其说明
+-r    递归压缩，将指定目录下的所有文件以及子目录全部压缩
+-d    从压缩文件内删除指定的文件
+-i "文件列表"  只压缩文件列表中的文件
+-x "文件列表"  压缩时排除文件列表中指定的文件
+-u    更新文件到压缩文件中
+-m    将文件加入压缩文件压缩后，删除原始文件，即把文件移到压缩文件中
+-F    尝试修复损坏的压缩文件
+-T    检查压缩文件内的每个文件是否正确无误
+- 压缩级别   压缩级别是1~9之间的一个数字
+
+
+       unzip  命令的选项及其说明
+-x "文件列表"  解压文件，但不包含文件列表中指定的文件
+-t       测试压缩文件有无损坏，并不解压
+-v       查看压缩文件的详细信息，具体包括压缩文件中包含的文件大小、
+   文件名和压缩比等，并不解压。	   
+-n       解压时不覆盖已经存在的文件
+-o       解压时覆盖已经存在的文件，并且不要求用户确认
+-d 目录名  把压缩文件解压到指定目录下   
+```
+
+将  /etc 目录下的所有文件以及目录进行压缩，
+设置压缩级别为最高，保存到文件 /opt/etc.zip 
+```bash
+zip  -9r  /opt/etc.zip   /etc 
+```
+
+将 /var 目录中所有文件以及子目录压缩，除了 "*.log"文件之外，
+将压缩文件保存到  /opt 目录下
+```bash
+zip  -r  /opt/var.zip  /var  -x  "*.log"
+```
+
+将上面 /opt/etc.zip 中的 etc/passwd 文件从压缩包中删除
+```bash
+zip  /opt/etc.zip  -d  etc/passwd
+```
+
+修改了 /etc/inittab 文件，希望把更改信息更新到 /opt/etc.zip包中
+```bash
+zip  -u  /opt/etc.zip  /etc/inittab 
+```
+
+如果 /etc 目录下很多文件进行了修改或者增加了很多文件，
+就需要把 /etc 目录下的全部信息更新到 /opt/etc.zip 文件中。
+可以使用如下命令：
+```bash
+zip  -u  /opt/etc.zip  /etc/*
+
+或者使用
+zip  -ru  /opt/etc.zip  /etc
+```
+
+将 /opt/etc.zip 压缩文件全部解压到 /etc 目录下，
+除了 etc/inittab 文件之外，并且在解压过程中如果出现相同的文件就直接进行覆盖，
+不要求用户确认。可以使用如下命令：
+```bash
+unzip  -o  /opt/etc.zip  -x  etc/inittab  -d  /etc 
+```
+
+
+### gzip/gunzip 命令
+将一般的文件进行压缩或者解压。压缩文件预设的扩展名为".gz"，其实gunzip就是gzip的硬链接，
+因此无论是压缩或解压都可以通过gzip来实现。
+
+gzip 只能对文件进行压缩，不能压缩目录，即使指定压缩的目录，也只能压缩目录内的所有文件。
+其格式如下：
+```bash
+gzip  [选项]  压缩   （解压缩）的文档名
+
+
+          gzip  命令的选项及其说明
+-d    对压缩的文件进行解压
+-r    递归式压缩指定目录以及子目录下的所有文件
+-t    检查压缩文档的完整性
+-v    对于每个压缩和解压缩的文档，显示相应的文件名和压缩比
+-l    显示每个压缩文件的压缩信息，显示字段为压缩文档大小、未压缩文档大小、压缩比和未压缩文档名称
+-num  用指定的数字 num 配置压缩比， "-1"或"-fast"表示最低压缩比，"-9"或"best"表示最高压缩比。
+   系统默认压缩比为6.	  
+```
+
+首先将  /etc 目录下的所有文件以及子目录进行压缩，备份压缩包 etc.zip 到/opt目录，
+然后对 etc.zip 文件进行 gzip 压缩，设置gzip的压缩级别为 9.
+```bash
+zip  -r  /opt/etc.zip  /etc
+gzip  -9v  /opt/etc.zip 
+```
+
+查看上述 etc.zip.gz 文件的压缩信息
+```bash
+gzip  -l  /opt/etc.zip.gz  
+```
+
+解压上述 etc.zip.gz 文件到当前目录
+```bash
+gzip  -d  /opt/etc.zip.gz
+
+gunzip   /opt/etc.zip.gz
+```
+gzip  -d 等价于  gunzip 
+
+
+
+### bzip2/bunzip2 命令
+对文件进行压缩和解压缩。
+此命令类似于 "gzip/gunzip" 命令，只能对文件进行压缩。
+对于目录只能压缩目录下的所有文件，压缩完成后，在目录下生成以".bz2"为后缀的压缩包。
+bunzip2其实是bzip2的符号链接，即4软链接，因此压缩、解压都可以通过bzip2实现。
+
+其格式如下：
+bzip2  [选项]  要压缩或解压的文件
+```bash
+           bzip2  命令的选项及其说明
+-d      执行解压缩，此时选项后面跟要解压缩的文件
+-v      压缩或解压文件时，显示详细信息
+-k      bzip2在压缩或解压缩后，会删除原始文件，若要保留原始文件，可使用此选项。
+-f      bzip2在此压缩或解压缩时，若输出文件与现有文件同名，预设不会覆盖现有文件。
+    若要覆盖，就要使用此选项。
+-t      测试 ".bz2" 压缩文件的完整性
+- 压缩级别    压缩级别可以从1~9中选取，数字越大，压缩率越高
+```
+
+将 /opt 目录下的 etc.zip, var.zip 和 backup.zip 进行压缩，
+设置压缩率为最高，同时在压缩完毕后不删除原始文件，显示压缩过程的详细信息。
+```bash
+bzip2  -9vk  /opt/etc.zip   /opt/var.zip   /opt/backup.zip
+```
+
+
+### tar 命令 
+tar是linux下经常使用的归档工具，对文件或者目录进行打包归档，归档成一个文件，但并不进行压缩。
+其格式如下：
+tar  [主选项 + 辅助选项]  文件或目录
+```bash
+      tar  命令的主选项及其说明
+-c    新建文件
+-r    把要归档的文件追加到档案文件的末尾
+-t    列出档案文件中已经归档的文件列表
+-x    从打包的档案文件中还原出文件
+-u    更新档案文件，用新建文件替换档案中的原始文件	  
+	  
+	  
+	  tar   命令的辅助选项及其说明
+-z    调用gzip命令在文件打包的过程中压缩/解压文件	 
+-w    在还原文件时，把所有文件的修改时间设定为现在时间
+-j    调用bzip2命令在文件打包的过程中压缩/解压文件
+-Z    调用 compress 命令过滤档案
+-f    "-f"选项后面紧跟档案文件的存储设备，默认是磁盘，需要制定档案文件名；
+     在"-f"选项之后不能再跟任何其他选项，也就是说，"-f"必须是tar命令的最后一个选项。
+-v    指定在创建归档文件过程中，显示各个归档文件的名称。
+-p    在文件归档的过程中，保持文件的属性不发生变化
+-N  "yyyy/mm/dd"  在指定日期之后的文件才打包到档案文件中
+--exclude  file    在打包过程中，不将指定file文件打包 
+```
+
+将 /etc 目录下的所有文件打包，并显示打包的详细文件，设置打包文件名为 etc.tar，
+同时保存文件到 /opt 目录下
+```bash
+tar  -cvf  /opt/etc.tar   /etc
+```
+
+将 /etc 目录下的所有文件打包并压缩，然后显示打包的详细文件，
+设置打包文件名为 etc.tar.gz，同时保存文件到 /opt目录下：
+```bash
+tar  -zcvf  /opt/etc.tar.gz   /etc
+
+
+tar  -jcvf  /opt/etc.tar.bz2   /etc
+```
+
+查阅上面 /opt/etc.tar.gz 压缩包的内容
+```bash
+tar  -ztvf  /opt/etc.tar.gz
+
+
+etc.tar.gz 可能包含很多个文件，无法一个屏幕显示完毕，这时可以使用 more 命令，
+比如：  tar  -zxvf  /opt/etc.tar.gz | more 
+```
+
+将 /opt/etc.tar.gz 解压到 /usr/local/src 下
+```bash
+cd    /usr/local/src  
+
+tar  -zxvf    /opt/etc.tar.gz
+```
+
+将 /etc 目录下的所有文件打包备份到 /opt目录下，并保存每个文件的权限
+```bash
+tar  -zcvpf   /opt/etc.tar.gz  /etc 
+```
+
+在 /opt 目录下，仅解压 /opt/etc.tar.gz 压缩文件中的  /etc/inittab文件
+```bash
+cd    /opt
+tar  -zxvf  /opt/etc.tar.gz  etc/inittab 
+```
+
+打包备份 /var/log 目录中 2008/7/21 以后的文件
+```bash
+tar   -N   "2008/7/21"  -zcvf  log.tar.gz  /var/log  
+```
+
+
+打包备份 /home 目录和 /etc 目录，但是不备份 /home 下的 ixdba目录
+```bash
+tar   -exclude  /home/ixdba  -zcvf  myfile.tar.gz  /home/*  /etc
+```
+
+将 /etc 目录打包压缩后直接解压到 /opt 目录下，而不生成打包的档案文件
+```bash
+cd    /opt
+tar  -zcvf  -  /etc  |  tar  -zxvf  -
+
+紧跟在 "f" 后面的 "-"将创建的档案文件输出到标准输出，
+"|"在 linux下表示管道符，
+命令最后的 "-"表示将tar命令通过管道传入的档案文件作为需要解压的数据来源。
+```
+
+
+### dd 命令
+dd 命令用来转换或复制文件，同时可以对设备进行备份。其格式如下：
+dd  if="input_file"  of="output_file"  bs="block_size"  count="number"
+
+dd命令的选项及其说明如下：
+ - > if: 就是输入文件，可以是设备，例如，磁盘某分区或者整个磁盘
+ - > of: 就是输出文件，也可以是输出设备，例如，磁盘、磁带等
+ - > bs: 指定一个block的大小，如果没有指定，默认为 512字节
+ - > count: 就是 "bs"的数量
+ 
+将 /etc/inittab 文件备份到 /opt/inittab.bak 中 
+```bash
+dd   if=/etc/inittab   of=/opt/inittab.bak 
+```
+
+将 /dev/sda2 整个分区进行备份，保存备份文件到 /opt 目录
+```bash
+dd  if=/dev/sda2  of=/opt/sda2.bak
+```
+
+将上面例子中备份包 /opt/sda2.bak 恢复到相应的分区，使用以下命令：
+```bash
+dd  if=/opt/sda2.back  of=/dev/sda2
+
+在恢复目标分区时，一定要先卸载目标分区，待恢复完成，再进行挂载
+```
+
+### cpio 命令
+cpio命令是通过重定向的方式将文件进行打包、备份、还原、恢复的工具，
+它可以解压以 ".cpio" 或者 ".tar" 结尾的文件。
+其格式如下：
+
+cpio  [选项]  >  文件名或者设备名
+
+cpio  [选项]  >  文件名或者设备名
+
+```bash
+        cpio 命令的选项及其说明
+-o      将文件复制、打包成文件或者将文件输出到设备上
+-i      将打包文件解压或者将设备上的备份还原到系统中
+-t      查看 cpio 打包的文件内容或者输出到设备上的文件内容
+-v      显示打包过程中的文件名称
+-d      在cpio还原文件的过程中，自动建立相应的目录
+-c      一种较新的存储方式
+-B      让默认块可以增大到5120字节，默认块为512字节，这样做的好处是可以加快存取速度		
+```
+
+将 /etc 下的所有普通文件都备份到 /opt/etc.cpio 中
+```bash
+find   /etc  -type  f | cpio  -ocvB  >  /opt/etc.cpio
+```
+
+
+##  磁盘管理与维护
+
+### df 命令
+df命令用来检查 Linux 系统的磁盘空间占用情况。
+其格式如下：
+df  [选项]
+```bash
+       df   命令的选项及其说明
+-h     以容易理解的格式输出文件系统分区占用情况，如 32B、120MB、60GB
+-k     以KB大小为单位输出文件系统分区占用情况
+-m     以MB大小为单位输出文件系统的分区占用情况
+-a     列出所有的文件系统分区，包含0大小的文件系统分区
+-i     列出文件系统分区的 inode 信息
+-T     显示磁盘分区的文件系统类型
+```
+
+查看当前系统磁盘分区情况，并显示文件系统类型
+```bash
+[heliang@VM_0_10_centos linuxCmd]$ df -hT
+Filesystem     Type      Size  Used Avail Use% Mounted on
+devtmpfs       devtmpfs  1.9G     0  1.9G   0% /dev
+tmpfs          tmpfs     1.9G   24K  1.9G   1% /dev/shm
+tmpfs          tmpfs     1.9G  484K  1.9G   1% /run
+tmpfs          tmpfs     1.9G     0  1.9G   0% /sys/fs/cgroup
+/dev/vda1      ext3       50G   20G   28G  42% /
+tmpfs          tmpfs     379M     0  379M   0% /run/user/0
+tmpfs          tmpfs     379M     0  379M   0% /run/user/1000
+
+```
+
+输出文件系统的 inode 信息
+```bash
+[heliang@VM_0_10_centos linuxCmd]$ df  -ihT
+Filesystem     Type     Inodes IUsed IFree IUse% Mounted on
+devtmpfs       devtmpfs   472K   308  471K    1% /dev
+tmpfs          tmpfs      474K     7  474K    1% /dev/shm
+tmpfs          tmpfs      474K   404  474K    1% /run
+tmpfs          tmpfs      474K    16  474K    1% /sys/fs/cgroup
+/dev/vda1      ext3       3.2M  288K  2.9M    9% /
+tmpfs          tmpfs      474K     1  474K    1% /run/user/0
+tmpfs          tmpfs      474K     1  474K    1% /run/user/1000
+
+```
+
+### du 命令
+du 命令用来显示文件或目录所占用的磁盘空间。
+其格式如下：
+du  [选线]  文件或目录
+```bash
+        du 命令的选项及其说明
+-s     显示文件或者整个目录的大小，单位为KB
+-b     以字节为单位显示文件大小或者显示目录下所有文件的大小
+-sh    以人性化的格式显示文件或目录大小，如300MB，1.2GB 等
+-sm    以MB为单位显示文件或者目录大小		
+```
+
+显示当前目录下所有文件的大小
+```bash
+du  -sh  ./*
+```
+
+显示 /home/heliang 目录的大小
+```bash
+[heliang@VM_0_10_centos ~]$ du -sh  /home/heliang/ 
+7.0G	/home/heliang/
+
+```
+
+### fsck命令
+fsck命令用来检查文件系统并尝试修复错误。
+格式如下：
+fsck  [选项]  [-t < 文件系统类型]  [设备名]
+
+在执行fsck命令修复某个文件系统时，
+这个文件系统对应的磁盘分区一定要处于卸载状态，
+磁盘分区在挂载状态下进行修复是极为不安全的，
+数据可能遭到破坏，也有可能损坏磁盘。
+
+### sync命令
+sync命令用来强制把内存中的数据写回硬盘，以免数据的丢失。
+其格式如下：
+```bash
+sync  
+```
+
+### eject命令
+eject命令用来退出抽取式设备，如光驱或磁带。
+如果该设备已挂载，则eject先将设备卸载，
+然后再退出设备。
+其格式如下：
+eject  [选项]  设备名
+
+要卸载 linux 系统的 /tmp分区，使用以下命令：
+```bash
+eject   /tmp
+```
+
+### mount/umount 命令
+挂载以及卸载指定的文件系统。
+
+```bash
+mount  [选项]  [-L<标签>]  [-o<选项>]  [-t<文件系统类型>]  [设备名]  [挂载点]
+
+unmount  [挂载点]
+```
+
+## 网络设置与维护
+ifconfig 命令
+ifconfig命令用来配置网络或显示当前网络接口状态。
+
+要在 eth0上配置两个IP地址，分别为 192.168.60.136、192.168.66.138，
+子网掩码为 255.255.255.0，使用以下命令：
+```bash
+ifconfig  eth0  192.168.60.136  netmask  255.255.255.0
+ifconfig  eth0:0  192.168.66.138  netmask  255.255.255.0
+
+此时用 ifconfig 命令就可以看到2个网卡信息了，分别是 "eth0" 和 "eth0:0".
+```
+
+修改网卡的MAC地址为新的MAC地址，使用以下命令：
+```bash
+ifconfig  eth0 ether  XX:XX:XX:XX:XX:XX
+```
+
+将 eth0 禁用后再启用
+```bash
+ifconfig  eth0  down
+ifconfig  eth0  up
+```
+用ifconfig 命令配置的网卡信息，在网卡重启或者机器重启后，
+所有的配置都失效了，如果要让网卡配置永久生效，就需要修改网卡的配置文件。
+
+
+### scp命令
+scp就是secure copy，用于将文件或目录从一个Linux系统复制到另一个Linux系统下。
+scp传输数据用的是SSH协议，保证了数据传输的安全。其格式如下：
+
+### netstat 命令
+netstat 命令用来显示本机网络连接、运行端口和路由表等信息。
+其格式如下：
+netstat  [选项]
+```bash
+        netstat  命令的选项及其说明
+-a     显示本机所有连接的监听端口
+-n     以网络IP地址的形式显示当前建立的有效连接和端口
+-r     显示路由表信息
+-s     显示按协议的统计信息。默认情况下，
+   将显示IP、IPv6、ICMP、ICMPv6、TCP、TCPv6、UDP和UDPv6的统计信息。
+-v     显示当前的有效连接，与"-n"选项类似
+-t     显示所有的TCP协议连接情况
+-u     显示所有的UDP协议连接情况
+-c<秒数>  后面跟的秒数，表示每隔几秒就刷新显示一次
+-i      显示自动配置接口的状态
+-l      仅显示连接状态为 "LISTEN" 的服务的网络状态
+-p      显示连接对应的 PID 与程序名
+```
+
+显示当前系统的路由信息
+```bash
+[heliang@VM_0_10_centos ~]$ netstat -rn
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
+0.0.0.0         172.21.0.1      0.0.0.0         UG        0 0          0 eth0
+169.254.0.0     0.0.0.0         255.255.0.0     U         0 0          0 eth0
+172.21.0.0      0.0.0.0         255.255.240.0   U         0 0          0 eth0
+```
+
+
+
 ```bash
 
 ```
 
-```bash
-
-```
 
 ```bash
 
 ```
 
 
+```bash
+
+```
 
 
+```bash
+
+```
 
 
+```bash
 
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
+
+
+```bash
+
+```
 
 
 
