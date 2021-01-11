@@ -1170,54 +1170,208 @@ Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
 ```
 
 
+显示当前系统中所有有效的TCP连接：
+```bash
+netstat  -an
+```
+
+显示目前系统中已经启动的网络连接和对应的端口信息
+```bash
+[root@VM_0_10_centos ~]# netstat  -tlnpu
+Active Internet connections (only servers)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      897/sshd            
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN      1/systemd           
+tcp        0      0 0.0.0.0:25              0.0.0.0:*               LISTEN      1556/master         
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      1495/nginx: master  
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      911/php-fpm: master 
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      1641/mongod         
+tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      1483/mysqld         
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      1/systemd           
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      1495/nginx: master  
+tcp6       0      0 :::22                   :::*                    LISTEN      897/sshd            
+tcp6       0      0 :::25                   :::*                    LISTEN      1556/master         
+tcp6       0      0 :::13                   :::*                    LISTEN      1034/xinetd         
+tcp6       0      0 :::111                  :::*                    LISTEN      634/rpcbind         
+tcp6       0      0 :::21                   :::*                    LISTEN      922/vsftpd          
+udp        0      0 0.0.0.0:805             0.0.0.0:*                           634/rpcbind         
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           833/dhclient        
+udp        0      0 0.0.0.0:36965           0.0.0.0:*                           14335/ntpdate       
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           1/systemd           
+udp6       0      0 :::805                  :::*                                634/rpcbind         
+udp6       0      0 :::13                   :::*                                1034/xinetd         
+udp6       0      0 :::111                  :::*                                634/rpcbind   
+```
+可以看到开放了哪些端口信息，以及每个端口对应的服务名。
+
+
+
+查看当前系统上处于连接状态的资源信息：
+```bash
+[root@VM_0_10_centos ~]# netstat  -atunp 
+Active Internet connections (servers and established)
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      897/sshd            
+tcp        0      0 0.0.0.0:23              0.0.0.0:*               LISTEN      1/systemd           
+tcp        0      0 0.0.0.0:25              0.0.0.0:*               LISTEN      1556/master         
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      1495/nginx: master  
+tcp        0      0 127.0.0.1:9000          0.0.0.0:*               LISTEN      911/php-fpm: master 
+tcp        0      0 127.0.0.1:27017         0.0.0.0:*               LISTEN      1641/mongod         
+tcp        0      0 0.0.0.0:3306            0.0.0.0:*               LISTEN      1483/mysqld         
+tcp        0      0 0.0.0.0:111             0.0.0.0:*               LISTEN      1/systemd           
+tcp        0      0 0.0.0.0:80              0.0.0.0:*               LISTEN      1495/nginx: master  
+tcp        0      0 172.21.0.10:22          190.85.239.59:46028     TIME_WAIT   -                   
+tcp        0      0 172.21.0.10:23          115.220.10.112:50810    ESTABLISHED 1/systemd           
+tcp        0      1 172.21.0.10:23          193.33.39.134:36626     LAST_ACK    -                   
+tcp        0      0 172.21.0.10:23          14.164.91.87:56057      ESTABLISHED 1/systemd           
+tcp        0      0 172.21.0.10:23          14.164.91.87:56216      ESTABLISHED 1/systemd           
+tcp        0     12 172.21.0.10:23          193.33.39.134:37101     ESTABLISHED 1/systemd           
+tcp        0      0 172.21.0.10:23          14.164.91.87:56539      ESTABLISHED 1/systemd           
+tcp        0     52 172.21.0.10:22          112.10.64.166:8188      ESTABLISHED 12717/sshd: heliang 
+tcp        0      0 172.21.0.10:23          75.165.226.83:37764     ESTABLISHED 1/systemd           
+tcp        0      0 172.21.0.10:23          14.164.91.87:56345      ESTABLISHED 1/systemd           
+tcp6       0      0 :::22                   :::*                    LISTEN      897/sshd            
+tcp6       0      0 :::25                   :::*                    LISTEN      1556/master         
+tcp6       0      0 :::13                   :::*                    LISTEN      1034/xinetd         
+tcp6       0      0 :::111                  :::*                    LISTEN      634/rpcbind         
+tcp6       0      0 :::21                   :::*                    LISTEN      922/vsftpd          
+udp        0      0 0.0.0.0:805             0.0.0.0:*                           634/rpcbind         
+udp        0      0 0.0.0.0:68              0.0.0.0:*                           833/dhclient        
+udp        0      0 0.0.0.0:111             0.0.0.0:*                           1/systemd           
+udp6       0      0 :::805                  :::*                                634/rpcbind         
+udp6       0      0 :::13                   :::*                                1034/xinetd         
+udp6       0      0 :::111                  :::*                                634/rpcbind     
+```
+可以通过 foreign address 看到当前的连接状态
+
+
+### traceroute 命令
+traceroute命令用来显示网络数据包传输到指定主机的路径信息，
+追踪数据传输路由状况。
+预设数据包大小是38字节，用户可以自行设置。
+其格式如下：
+traceroute  [选项]  [远程主机名或者IP地址]  [数据包大小]
+
+指定eth0网络接口发送数据包，同时指定本地发送数据包的IP，
+并设置超时时间为10秒，最后设置发送数据包的大小为100字节。
+根据输出看本机到 远程主机 对应的IP地址经历了哪些路由的迂回。
+```bash
+[root@VM_0_10_centos ~]# traceroute -i eth0 -s 172.21.0.10 -w 10 www.baidu.com 100 
+traceroute to www.baidu.com (220.181.38.149), 30 hops max, 100 byte packets
+ 1  100.78.198.130 (100.78.198.130)  7.297 ms  7.623 ms  7.683 ms
+ 2  * * *
+ 3  10.196.50.141 (10.196.50.141)  0.847 ms * *
+ 4  * 10.196.1.85 (10.196.1.85)  0.791 ms *
+ 5  10.162.5.136 (10.162.5.136)  1.068 ms  1.150 ms 10.162.5.135 (10.162.5.135)  1.174 ms
+ 6  * * *
+ 7  36.110.248.142 (36.110.248.142)  5.037 ms 42.81.48.105 (42.81.48.105)  2.042 ms 42.81.48.77 (42.81.48.77)  2.047 ms
+ 8  42.81.35.17 (42.81.35.17)  4.463 ms 36.110.245.73 (36.110.245.73)  4.916 ms 42.81.35.1 (42.81.35.1)  1.634 ms
+ 9  36.110.248.30 (36.110.248.30)  4.103 ms 36.110.247.206 (36.110.247.206)  4.503 ms 36.110.245.194 (36.110.245.194)  6.588 ms
+
+```
+
+### telnet 命令
+telnet命令通过telnet协议与远程主机通信或者获取远程主机对应端口的信息。
+其格式如下：
+telent   主机名或者IP地址   端口
+
+要通过telnet 协议登录到开启了telnet服务的远程主机上，使用以下命令：
+```bash
+telnet  192.168.60.123  23
+```
+
+
+### wget命令
+wget命令用来从网络上下载某个软件。
+其格式如下：
+wget  [要下载软件的网址]
+
+## 文本编辑工具 vi 
 
 ```bash
+        用vi打开文件的命令选项及说明
+vi  filename      打开或者新建一个文件，并将光标置于第一行的首部
+vi -r filename    恢复上次vi打开时崩溃的文件
+vi -R filename    把指定的文件以只读方式放入编辑器中
+vi + filename     打开文件并将光标置于最后一行的首部
+vi +n filename    打开文件，并将光标置于第n行的首部
+vi +/pattern filename  打开文件，并将光标置于第1个与pattern匹配的位置
+vi -c command filename 在对文件进行编辑前，先执行指定的命令
+```
 
+vi 命令模式下的命令选项，主要分为移动光标类命令、屏幕翻滚类命令、
+插入与删除文本类命令、搜索与替换类命令以及保存与退出类命令。
+
+```bash
+        移动光标类命令及其说明
+h             光标左移一个字符
+l             光标右移一个字符
+Backspace键   光标左移一个字符
+k或Ctrl+p     光标上移一个字符
+j或Ctrl+n     光标下移一个字符
+Enter键       光标下移一行
+w或W          光标右移一个字到字首
+b或B          光标左移一个字到字首
+e或E          光标右移一个字到字尾
+nG            光标移动到第n行首部
+n+            光标下移n行
+n-            光标上移n行
+n$            相对于当前光标所在行，光标再向后移动n行到行尾
+H             光标移至当前屏幕的顶行
+M             光标移至当前屏幕的中间行
+L             光标移至当前屏幕的最底行
+0             将光标移至当前行首
+$             将光标移至当前行尾
+:$            将光标移动到文件最后一行的行首		
+```
+
+```bash
+         屏幕翻滚类命令及其说明
+Ctrl+u     相对于当前屏幕，向文件首翻半屏
+Ctrl+d     相对于当前屏幕，向文件尾翻半屏
+Ctrl+b     相对于当前屏幕，向文件首翻1屏
+Ctrl+f     相对于当前屏幕，向文件尾翻1屏
+nz+Enter   将文件的第n行翻滚至屏幕顶部，如果不指定n值，将当前行滚至屏幕顶部。				 
 ```
 
 
 ```bash
-
+          插入与删除文本类命令及其说明
+Esc      返回命令模式
+i        在光标前输入文字
+a        在光标后输入文字
+o        在当前行之下新开一行
+O        在当前行之上新开一行
+r        替换光标所在字符，输入r命令后，在键盘上输入需要替换的新字符即可完成替换
+x        删除光标所在的字符
+dd       删除光标所在的行。
+yy       将光标所在的行复制到剪贴板，如果在'yy'前加上数字，可复制多行
+p        (小写p)将剪贴板的内容复制到光标后
+P        (大写P)将剪贴板的内容复制到光标前
+yw        将光标所在的单词复制到剪贴板
 ```
 
 
 ```bash
-
+         搜索及替换类命令及其说明
+/abc      在文件中向前查找字符串 abc
+?abc      在文件中向后查找字符串 abc 
+n         在同一个方向重复上次的搜索命令
+N         在相反方向重复上次的搜索命令
+:s/a1/a2/g  将当前光标所在行中的所有 a1 均用 a2 替换
+:n1,n2s/a1/a2/g  将文件第n1 至 n2 行中所有 a1 均用 a2 替换
+:g/a1/a2/g    将文件中所有的a1均用a2替换
+:set nu       给文件每行加上行号
 ```
 
 
 ```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
-```
-
-
-```bash
-
+            保存与退出类命令及其说明
+:wq      保存并退出vi编辑器，":wq!"表示不保存，强制退出
+:q       不保存就退出vi编辑器，":q!"表示不保存，强制退出
+:w       保存但是不退出vi编辑器，"w!"表示强制保存
+    ":w  filename" 表示将修改保存到 "filename"中。相当于另存文件。
+x!       保存文件，退出vi编辑器，更通用的一个vi命令。    	   		 
 ```
 
 
